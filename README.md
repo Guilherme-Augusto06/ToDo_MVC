@@ -32,11 +32,5 @@ Para usar a aplicação, basta executar o arquivo da View no console. A partir d
 
 Certifique-se de ter as dependências adequadas instaladas, que podem incluir Python, de acordo com os requisitos do projeto.
 
-## Contribuições
 
-Este projeto é um exemplo simples do padrão MVC em Python e é destinado apenas para fins educacionais. Sinta-se à vontade para usá-lo como ponto de partida para seus próprios projetos ou contribuir com melhorias se desejar.
-
-## Licença
-
-Este projeto é de código aberto e está disponível sob a [Licença MIT](LICENSE).
 
