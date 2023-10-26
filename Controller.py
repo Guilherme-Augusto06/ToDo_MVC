@@ -17,7 +17,7 @@ class ControllerAdicionarTarefa():  # Define a classe ControllerAdicionarTarefa
             print("Tarefa Adicionada")  # Imprime uma mensagem de sucesso
         else:
             print("Não foi possível adicionar a tarefa.")
-
+ 
 
 
 class ControllerExcluirTarefa:
@@ -61,36 +61,6 @@ class ControllerListarTarefas:
                 else:
                     print(f"[{i}] - Tarefa não encontrada.")
 
-
-    def alterarTarefa(self, indice, nova_descricao):
-        try:
-            with open(self.arquivo, "r") as arquivo:
-                tarefas = arquivo.readlines()
-
-            if indice >= 0 and indice < len(tarefas):
-                tarefa_parts = tarefas[indice].split(" - ", 2)
-                if len(tarefa_parts) == 3:
-                    _, status, _ = tarefa_parts
-                    tarefa_parts[2] = nova_descricao  # Altera apenas a descrição
-                    tarefas[indice] = " - ".join([tarefa_parts[0], status, tarefa_parts[2]])
-
-                    with open(self.arquivo, "w") as arquivo:
-                        arquivo.writelines(tarefas)
-
-                    return True
-                else:
-                    print("Tarefa não encontrada.")
-                    return False
-            else:
-                print("Índice inválido.")
-                return False
-        except Exception as error:
-            print(error.__class__.__name__)
-            return False
-        
-
-
-
 class ControllerConcluirTarefa:
     def __init__(self, concluir):
         self.concluir = int(concluir)
@@ -107,14 +77,21 @@ class ControllerConcluirTarefa:
                 _, texto_tarefa = tarefa_parts
                 print(f"Concluindo a tarefa: {texto_tarefa}")
 
-                if DAO.ConcluirTarefa(self.concluir - 1):  # Correção: Chamada correta para DAO.ConcluirTarefa
+                if DAO.concluirTarefa(self.concluir - 1):
                     print("Tarefa Concluída")
+                    # Agora, adicione a tarefa concluída à lista de tarefas concluídas
+                    tarefa_concluida = f"{texto_tarefa} - Concluída"  # Adiciona o status de concluída
+                    if DAO.adicionarTarefaConcluida(tarefa_concluida):
+                        print("Tarefa adicionada à lista de tarefas concluídas")
+                    else:
+                        print("Não foi possível adicionar a tarefa à lista de tarefas concluídas.")
                 else:
                     print("Não foi possível concluir a tarefa. Verifique o índice.")
             else:
                 print("Tarefa não encontrada.")
         else:
             print("Índice inválido.")
+
 
 class ControllerListarTarefasConcluidas:
     def __init__(self):
@@ -124,13 +101,14 @@ class ControllerListarTarefasConcluidas:
     def exibirTarefas(self):
         if self.lista:
             for i, tarefa in enumerate(self.lista, start=1):
-                tarefa_parts = tarefa.split(" - ", 2)  # Dividir em 3 partes
+                tarefa_parts = tarefa.split(" - ", 3)  # Correção: Dividir em 4 partes
 
-                if len(tarefa_parts) == 3:
-                    _, status, texto_tarefa = tarefa_parts
+                if len(tarefa_parts) == 4:  # Correção: Verificar se há 4 partes
+                    _, status, texto_tarefa, _ = tarefa_parts  # Correção: Adicionar uma variável para o último valor não usado
                     print(f"[{i}] - Status: {status}, Tarefa: {texto_tarefa}")
                 else:
                     print(f"[{i}] - Tarefa não encontrada.")
+
 
 class ControllerAlterarTarefa:
     def __init__(self, indice, nova_descricao):
@@ -151,5 +129,4 @@ class ControllerAlterarTarefa:
                 print("Índice inválido.")
         else:
             print("Operação cancelada.")
-
 
