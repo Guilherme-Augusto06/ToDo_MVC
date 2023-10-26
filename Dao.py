@@ -8,7 +8,7 @@ class Dao:  # Define a classe Dao
         try:  # Tenta executar o bloco de código dentro do try
 
             with open(self.arquivo, "a") as arquivo:  # Abre o arquivo em modo de anexação ("a")
-                arquivo.write(tarefa + "\n") # Escreve a tarefa no arquivo seguida de uma quebra de linha
+                arquivo.write(tarefa) # Escreve a tarefa no arquivo seguida de uma quebra de linha
                 #O Arquivo ter como padrão ja escrito ID - Tarefa
                 
                 return True  # Retorna True indicando que a tarefa foi adicionada com sucesso
@@ -56,7 +56,7 @@ class Dao:  # Define a classe Dao
                     tarefas[indice] = " - ".join([tarefa_parts[0], status, tarefa_parts[2]])
 
                     with open(self.arquivo, "w") as arquivo:
-                        arquivo.writelines(tarefas )
+                        arquivo.writelines(tarefas)
 
                     return True
                 else:
@@ -106,7 +106,7 @@ class Dao:  # Define a classe Dao
     def adicionarTarefaConcluida(self, tarefa_concluida):
         try:
             with open(self.arquivo, "a") as arquivo:
-                arquivo.write(tarefa_concluida + "\n")
+                arquivo.write(tarefa_concluida)
 
             return True
 
