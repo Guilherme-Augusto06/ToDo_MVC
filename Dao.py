@@ -41,7 +41,7 @@ class Dao:  # Define a classe Dao
         except Exception as error:
             print(error.__class__.__name__)
             return False
-        
+            
 
     def alterarTarefa(self, indice, nova_descricao):
         try:
@@ -56,7 +56,7 @@ class Dao:  # Define a classe Dao
                     tarefas[indice] = " - ".join([tarefa_parts[0], status, tarefa_parts[2]])
 
                     with open(self.arquivo, "w") as arquivo:
-                        arquivo.writelines(tarefas)
+                        arquivo.writelines(tarefas )
 
                     return True
                 else:
@@ -68,6 +68,7 @@ class Dao:  # Define a classe Dao
         except Exception as error:
             print(error.__class__.__name__)
             return False
+
 
         
     def concluirTarefa(self, concluir):
@@ -85,7 +86,7 @@ class Dao:  # Define a classe Dao
         except Exception as error:
             print(error.__class__.__name__)
             return False
-    
+        
     def listarTarefasConcluidas(self,concluidas):
         try:
             with open(self.arquivo, "r") as arquivo:
@@ -101,7 +102,26 @@ class Dao:  # Define a classe Dao
         except Exception as error:
             print(error.__class__.__name__)
             return False
-    
+        
+    def adicionarTarefaConcluida(self, tarefa_concluida):
+        try:
+            with open(self.arquivo, "a") as arquivo:
+                arquivo.write(tarefa_concluida + "\n")
+
+            return True
+
+        except Exception as error:
+            print(error.__class__.__name__)
+            return False
+        
+    def listarTarefasConcluidas(self):
+        try:
+            with open(self.arquivo, "r") as arquivo:
+                return arquivo.readlines()
+
+        except Exception as error:
+            print(error.__class__.__name__)
+            return False
 
 
 
