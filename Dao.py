@@ -1,9 +1,7 @@
-
 class Dao:  # Define a classe Dao
     def __init__ (self):  # Método construtor sem parâmetros
         self.arquivo  = "tarefas.txt"  # Define o nome do arquivo onde as tarefas serão armazenadas
         with open (self.arquivo, "a") as arquivo:
-            arquivo.write("ID --- Tarefa \n")
             arquivo.close()
 
     def AdicionarTarefa(self, tarefa):  # Define o método AdicionarTarefa que recebe a tarefa como parâmetro
@@ -28,30 +26,82 @@ class Dao:  # Define a classe Dao
             print(error.__class__.__name__)  # Imprime o nome da classe do erro
             return False  # Retorna False indicando que as tarefas não foram listadas com sucesso
 
-class ControllerExcluirTarefa:
-    def __init__(self, excluir):
-        self.excluir = int(excluir)
-        self.excluir_tarefa()
+    def excluirTarefa(self, excluir):
+        try:
+            with open(self.arquivo, "r") as arquivo:
+                tarefas = arquivo.readlines()
+                tarefas.pop(excluir)
 
-    def excluir_tarefa(self):
-        tarefas = DAO.listarTarefas()
+            with open(self.arquivo, "w") as arquivo:
+                for tarefa in tarefas:
+                    arquivo.write(tarefa)
 
-        if self.excluir >= 1 and self.excluir <= len(tarefas):
-            tarefa = tarefas[self.excluir - 1]
-            tarefa_parts = tarefa.split(" - ", 1)
+            return True
 
-            if len(tarefa_parts) > 1:
-                _, texto_tarefa = tarefa_parts
-                print(f"Excluindo a tarefa: {texto_tarefa}")
+        except Exception as error:
+            print(error.__class__.__name__)
+            return False
+        
 
-                if DAO.ExcluirTarefa(self.excluir - 1):
-                    print("Tarefa Excluída")
+    def alterarTarefa(self, indice, nova_descricao):
+        try:
+            with open(self.arquivo, "r") as arquivo:
+                tarefas = arquivo.readlines()
+
+            if indice >= 0 and indice < len(tarefas):
+                tarefa_parts = tarefas[indice].split(" - ", 2)
+                if len(tarefa_parts) == 3:
+                    _, status, _ = tarefa_parts
+                    tarefa_parts[2] = nova_descricao  # Altera apenas a descrição
+                    tarefas[indice] = " - ".join([tarefa_parts[0], status, tarefa_parts[2]])
+
+                    with open(self.arquivo, "w") as arquivo:
+                        arquivo.writelines(tarefas)
+
+                    return True
                 else:
-                    print("Não foi possível excluir a tarefa. Verifique o índice.")
+                    print("Tarefa não encontrada.")
+                    return False
             else:
-                print("Tarefa não encontrada.")
-        else:
-            print("Índice inválido.")
+                print("Índice inválido.")
+                return False
+        except Exception as error:
+            print(error.__class__.__name__)
+            return False
+
+        
+    def concluirTarefa(self, concluir):
+        try:
+            with open(self.arquivo, "r") as arquivo:
+                tarefas = arquivo.readlines()
+                tarefas.pop(concluir)
+
+            with open(self.arquivo, "w") as arquivo:
+                for tarefa in tarefas:
+                    arquivo.write(tarefa)
+
+            return True
+
+        except Exception as error:
+            print(error.__class__.__name__)
+            return False
+    
+    def listarTarefasConcluidas(self,concluidas):
+        try:
+            with open(self.arquivo, "r") as arquivo:
+                tarefas = arquivo.readlines()
+                tarefas.pop(concluidas)
+
+            with open(self.arquivo, "w") as arquivo:
+                for tarefa in tarefas:
+                    arquivo.write(tarefa)
+
+            return True
+
+        except Exception as error:
+            print(error.__class__.__name__)
+            return False
+    
 
 
 
