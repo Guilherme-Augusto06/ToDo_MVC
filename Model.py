@@ -24,8 +24,8 @@ class ToDo():  # Define a classe ToDo
 
     def ListarTarefasConcluidas(self,concluidas):
         #Somente as tarefas concluidas
+        return self.lista
         
-        pass
 
 
 TODO = ToDo()  # Cria uma instância da classe ToDo e atribui à variável TODO
