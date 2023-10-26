@@ -12,5 +12,20 @@ class ToDo():  # Define a classe ToDo
 
     def ListarTarefas(self):  # Define o método ListarTarefas que não recebe nenhum parâmetro
         return self.lista  # Retorna a lista de tarefas
+    
+    def AlterarTarefa(self, alterar):
+        self.lista.pop(alterar)
+        return True
+    
+
+    def ConcluirTarefa(self, concluir):
+        self.lista.pop(concluir)
+        return True
+
+    def ListarTarefasConcluidas(self,concluidas):
+        #Somente as tarefas concluidas
+        
+        pass
+
 
 TODO = ToDo()  # Cria uma instância da classe ToDo e atribui à variável TODO
