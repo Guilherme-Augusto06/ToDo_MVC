@@ -8,7 +8,7 @@ class ControllerAdicionarTarefa():  # Define a classe ControllerAdicionarTarefa
         self.id = int(id)  # Converte o ID para inteiro
         self.status = "A fazer"  # Define o status da tarefa como "A fazer"
         self.tarefa = tarefa  # Atribui a tarefa passada como parâmetro para a instância atual
-        self.tarefa = f"{self.id} - {self.status} - {self.tarefa}"  # Concatena o ID, o status e a tarefa em uma única string
+        self.tarefa = f"{self.id} - {self.status} - {self.tarefa} \n"  # Concatena o ID, o status e a tarefa em uma única string
 
         self.adicionar_tarefa()  # Chama o método adicionar_tarefa
 
