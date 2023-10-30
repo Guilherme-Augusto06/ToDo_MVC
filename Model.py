@@ -15,11 +15,10 @@ class ToDo():  # Define a classe ToDo
     
     def AlterarTarefa(self, alterar):
         self.lista.pop(alterar)
-        return True
-    
+        return True 
 
     def ConcluirTarefa(self, concluir):
-        self.lista.pop(concluir)
+        self.lista_concluidos.pop(concluir)
         return True
 
     def ListarTarefasConcluidas(self,concluidas):
