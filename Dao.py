@@ -17,7 +17,7 @@ class Dao:  # Define a classe Dao
             print(error.__class__.__name__)  # Imprime o nome da classe do erro
             return False  # Retorna False indicando que a tarefa não foi adicionada com sucesso
         
-    def listarTarefas(self):  # Define o método listarTarefas que não recebe nenhum parâmetro
+    def listarTarefas(self):  # Define o método listar Tarefas que não recebe nenhum parâmetro
         try:  # Tenta executar o bloco de código dentro do try
             with open(self.arquivo, "r") as arquivo:  # Abre o arquivo em modo de leitura ("r")
                 return arquivo.readlines()  # Retorna uma lista contendo todas as linhas do arquivo
@@ -71,38 +71,32 @@ class Dao:  # Define a classe Dao
 
 
         
-    def concluirTarefa(self, concluir):
+    def concluirTarefa(self,indice, novo_status):
         try:
             with open(self.arquivo, "r") as arquivo:
                 tarefas = arquivo.readlines()
-                tarefas.pop(concluir)
 
-            with open(self.arquivo, "w") as arquivo:
-                for tarefa in tarefas:
-                    arquivo.write(tarefa)
+            if indice >= 0 and indice < len(tarefas):
+                tarefa_parts = tarefas[indice].split(" - ", 2)
+                if len(tarefa_parts) == 3:
+                    _, status, _ = tarefa_parts
+                    tarefa_parts[1] = novo_status  # Altera apenas o status
+                    tarefas[indice] = " - ".join([tarefa_parts[0], tarefa_parts[1], tarefa_parts[2]])
 
-            return True
+                    with open(self.arquivo, "w") as arquivo:
+                        arquivo.writelines(tarefas)
 
+                    return True
+                else:
+                    print("Tarefa não encontrada.")
+                    return False
+            else:
+                print("Índice inválido.")
+                return False
         except Exception as error:
             print(error.__class__.__name__)
             return False
-        
-    def listarTarefasConcluidas(self,concluidas):
-        try:
-            with open(self.arquivo, "r") as arquivo:
-                tarefas = arquivo.readlines()
-                tarefas.pop(concluidas)
-
-            with open(self.arquivo, "w") as arquivo:
-                for tarefa in tarefas:
-                    arquivo.write(tarefa)
-
-            return True
-
-        except Exception as error:
-            print(error.__class__.__name__)
-            return False
-        
+#///////////////////////////////////////////////////////////////////////
     def adicionarTarefaConcluida(self, tarefa_concluida):
         try:
             with open(self.arquivo, "a") as arquivo:
@@ -113,7 +107,7 @@ class Dao:  # Define a classe Dao
         except Exception as error:
             print(error.__class__.__name__)
             return False
-        
+#////////////////////////////////////////////////////////////////////////
     def listarTarefasConcluidas(self):
         try:
             with open(self.arquivo, "r") as arquivo:
