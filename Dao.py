@@ -51,10 +51,14 @@ class Dao:  # Define a classe Dao
             if indice >= 0 and indice < len(tarefas):
                 tarefa_parts = tarefas[indice].split(" - ", 2)
                 if len(tarefa_parts) == 3:
-                    _, status, _ = tarefa_parts
-                    tarefa_parts[2] = nova_descricao  # Altera apenas a descrição
-                    tarefas[indice] = " - ".join([tarefa_parts[0], status, tarefa_parts[2]])
+                    id, status, descricao = tarefa_parts  # Extrai as partes da tarefa
 
+                    # Atualiza somente a descrição mantendo id e status
+                    tarefa_atualizada = f"{id} - {status} - {nova_descricao}\n"
+
+                    tarefas[indice] = tarefa_atualizada  # Atualiza a tarefa na lista
+
+                    # Reescreve todas as tarefas no arquivo
                     with open(self.arquivo, "w") as arquivo:
                         arquivo.writelines(tarefas)
 
@@ -68,7 +72,6 @@ class Dao:  # Define a classe Dao
         except Exception as error:
             print(error.__class__.__name__)
             return False
-
 
         
     def concluirTarefa(self,indice, novo_status):
