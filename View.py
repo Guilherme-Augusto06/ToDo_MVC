@@ -51,9 +51,8 @@ while sair == 0:  # Inicia um loop que só será interrompido quando a variável
             os.system("pause")
         case "5":  # Se a opção escolhida foi "5"
             os.system("cls")  # Limpa a tela do console
-            listarTarefasConcluidas = ControllerListarTarefasConcluidas()  # Lista as tarefas
-            os.system("pause")  # Pausa a execução do programa até que o usuário pressione qualquer tecla
-
+            listarTarefas = ControllerListarTarefasConcluidas()  # Lista as tarefas
+            os.system("pause")  # Pausa a execução do programa até que o usuário pressione qualquer tecla   
         case "6":  # Se a opção escolhida foi "6"
             os.system("cls")  # Limpa a tela do console
             listarTarefas = ControllerListarTarefas()  # Lista as tarefas
