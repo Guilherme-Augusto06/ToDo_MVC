@@ -24,13 +24,18 @@ Este é um exemplo simples de uma aplicação de lista de tarefas usando o padr�
 
 - **ControllerListarTarefas:** Um controlador que lista todas as tarefas do Model, formatando a exibição para que o ID não seja visível.
 
+- **ControllerAlterarTarefas:** Este controlador lida com a alteração de tarefas existentes. Ele recebe o índice da tarefa a ser alterada e a nova descrição da tarefa do usuário. Em seguida, ele interage com o Model para atualizar a descrição da tarefa.
+
+- **ControllerListarTarefasConcluidas:**  Este controlador é responsável por listar todas as tarefas concluídas. Ele interage com o Model para recuperar todas as tarefas e, em seguida, filtra a lista para incluir apenas as tarefas que foram marcadas como concluídas.
+
+- **ControllerConcluirTarefa:** Este controlador lida com a conclusão de tarefas. Ele recebe o índice da tarefa a ser concluída do usuário e, em seguida, interage com o Model para marcar a tarefa como concluída.
+
 - **Dao:** Uma classe que lida com a persistência de dados, como adicionar, listar e excluir tarefas em um arquivo de texto.
 
 ## Uso
 
 Para usar a aplicação, basta executar o arquivo da View no console. A partir daí, você pode escolher entre as opções disponíveis para adicionar, listar ou excluir tarefas.
 
-Certifique-se de ter as dependências adequadas instaladas, que podem incluir Python, de acordo com os requisitos do projeto.
 
 
 
