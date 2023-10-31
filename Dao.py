@@ -111,15 +111,29 @@ class Dao:  # Define a classe Dao
             print(error.__class__.__name__)
             return False
 #////////////////////////////////////////////////////////////////////////
-    def listarTarefasConcluidas(self):
+    def adicionarTarefaConcluida(self, tarefa_concluida):
         try:
-            with open(self.arquivo, "r") as arquivo:
-                return arquivo.readlines()
+            with open(self.arquivo, "a") as arquivo:
+                arquivo.write(tarefa_concluida)
+
+            return True
 
         except Exception as error:
             print(error.__class__.__name__)
             return False
+#////////////////////////////////////////////////////////////////////////
+    def listarTarefasConcluidas(self):
+        try:
+            with open(self.arquivo, "r") as arquivo:
+                tarefas = arquivo.readlines()
 
+            tarefas_concluidas = [tarefa for tarefa in tarefas if "Concluída" in tarefa]
+
+            return tarefas_concluidas
+
+        except Exception as error:
+            print(error.__class__.__name__)
+            return False
 
 
 DAO = Dao()  # Cria uma instância da classe Dao e atribui à variável DAO
