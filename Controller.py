@@ -1,139 +1,153 @@
-class Dao:  # Define a classe Dao
-    def __init__ (self):  # Método construtor sem parâmetros
-        self.arquivo  = "tarefas.txt"  # Define o nome do arquivo onde as tarefas serão armazenadas
-        with open (self.arquivo, "a") as arquivo:
-            arquivo.close()
+from Model import *  # Importa todas as classes do módulo Model
+from Dao import *  # Importa todas as classes do módulo Dao
+import random  # Importa o módulo random para gerar números aleatórios
 
-    def AdicionarTarefa(self, tarefa):  # Define o método AdicionarTarefa que recebe a tarefa como parâmetro
-        try:  # Tenta executar o bloco de código dentro do try
+class ControllerAdicionarTarefa:
+    def __init__(self, tarefa):
+        if not tarefa.strip():  # Verifica se a tarefa é vazia ou apenas espaços em branco
+            print("Tarefa vazia. Não foi possível adicionar.")
+        else:
+            id = random.randint(1000, 9999) # Gera um número aleatório entre 1000 e 9999
+            self.id = int(id)   # Converte o número gerado para inteiro
+            self.status = "A fazer" # Define o status da tarefa como "A fazer"
+            self.tarefa = tarefa    # Define a tarefa
+            self.tarefa = f"{self.id} - {self.status} - {self.tarefa}\n"    # Define a tarefa no formato "id - status - tarefa"
 
-            with open(self.arquivo, "a") as arquivo:  # Abre o arquivo em modo de anexação ("a")
-                arquivo.write(tarefa) # Escreve a tarefa no arquivo seguida de uma quebra de linha
-                #O Arquivo ter como padrão ja escrito ID - Tarefa
-                
-                return True  # Retorna True indicando que a tarefa foi adicionada com sucesso
+            self.adicionar_tarefa() # Adiciona a tarefa
 
-        except Exception as error:  # Se ocorrer um erro durante a execução do bloco de código dentro do try
-            print(error.__class__.__name__)  # Imprime o nome da classe do erro
-            return False  # Retorna False indicando que a tarefa não foi adicionada com sucesso
-        
-    def listarTarefas(self):  # Define o método listar Tarefas que não recebe nenhum parâmetro
-        try:  # Tenta executar o bloco de código dentro do try
-            with open(self.arquivo, "r") as arquivo:  # Abre o arquivo em modo de leitura ("r")
-                return arquivo.readlines()  # Retorna uma lista contendo todas as linhas do arquivo
+    def adicionar_tarefa(self): # Define o método adicionar_tarefa
+        if DAO.AdicionarTarefa(self.tarefa):        # Correção: Chamada correta para DAO.AdicionarTarefa    
+            print("Tarefa Adicionada")        # Correção: Mensagem de sucesso
+        else:
+            print("Não foi possível adicionar a tarefa.")     # Correção: Mensagem de erro
 
-        except Exception as error:  # Se ocorrer um erro durante a execução do bloco de código dentro do try
-            print(error.__class__.__name__)  # Imprime o nome da classe do erro
-            return False  # Retorna False indicando que as tarefas não foram listadas com sucesso
 
-    def excluirTarefa(self, excluir):
+class ControllerExcluirTarefa:  # Define a classe ControllerExcluirTarefa
+    def __init__(self, excluir):    # Define o método construtor que recebe o índice da tarefa a ser excluída como parâmetro
         try:
-            with open(self.arquivo, "r") as arquivo:
-                tarefas = arquivo.readlines()
-                tarefas.pop(excluir)
+            self.excluir = int(excluir) # Converte o índice para inteiro
+            self.excluir_tarefa()   # Exclui a tarefa
+        except Exception as error:  # Se ocorrer um erro durante a execução do bloco de código dentro do try
+            print(error.__class__.__name__) # Imprime o nome da classe do erro
+            print("Não foi possível excluir a tarefa.") # Correção: Mensagem de erro
 
-            with open(self.arquivo, "w") as arquivo:
-                for tarefa in tarefas:
-                    arquivo.write(tarefa)
+    def excluir_tarefa(self):   # Define o método excluir_tarefa
+        tarefas = DAO.listarTarefas()   # Correção: Chamada correta para DAO.listarTarefas
+        try:
+            if self.excluir >= 1 and self.excluir <= len(tarefas):  # Verifica se o índice especificado é válido
+                tarefa = tarefas[self.excluir - 1]  # Correção: Índice da lista começa em 0
+                tarefa_parts = tarefa.split(" - ", 1)   # Extrai as partes da tarefa
 
-            return True
+                if len(tarefa_parts) > 1:   # Verifica se a tarefa foi encontrada
+                    _, texto_tarefa = tarefa_parts  # Extrai as partes da tarefa
+                    print(f"Excluindo a tarefa: {texto_tarefa}")    # Correção: Mensagem de sucesso
+
+                    if DAO.excluirTarefa(self.excluir - 1):  # Correção: Chamada correta para DAO.ExcluirTarefa
+                        print("Tarefa Excluída")    # Correção: Mensagem de sucesso
+                    else:
+                        print("Não foi possível excluir a tarefa. Verifique o índice.")
+                else:
+                    print("Tarefa não encontrada.")
+            else:
+                print("Índice inválido.")
 
         except Exception as error:
             print(error.__class__.__name__)
-            return False
             
 
-    def alterarTarefa(self, indice, nova_descricao):
+
+class ControllerListarTarefas:            
+    #listar somente as tarefas que não foram concluidas
+    def __init__(self):     
+        self.lista = DAO.listarTarefas()    # Correção: Chamada correta para DAO.listarTarefas
+        self.exibirTarefas()    # Exibe as tarefas
+
+    def exibirTarefas(self):    # Define o método exibirTarefas
+        if self.lista:  # Verifica se a lista não está vazia
+            for i, tarefa in enumerate(self.lista, start=1):    # Correção: Índice da lista começa em 0
+                tarefa_parts = tarefa.split(" - ", 2)   # Extrai as partes da tarefa
+                if len(tarefa_parts) == 3:  # Verifica se a tarefa foi encontrada
+                    _, status, texto_tarefa = tarefa_parts  # Extrai as partes da tarefa
+                    if status == "A fazer": # Verifica se o status da tarefa é "A fazer"
+                        print(f"[{i}] - Status: {status}, Tarefa: {texto_tarefa}")  # Correção: Índice da lista começa em 0
+                else:   # Se a tarefa não foi encontrada
+                    print(f"[{i}] - Tarefa não encontrada.")    # Correção: Índice da lista começa em 0
+
+
+class ControllerConcluirTarefa: # Define a classe ControllerConcluirTarefa
+    def __init__(self, indice, novo_status):    # Define o método construtor que recebe o índice da tarefa a ser concluída e o novo status como parâmetros
         try:
-            with open(self.arquivo, "r") as arquivo:
-                tarefas = arquivo.readlines()
+            self.indice = int(indice)   # Converte o índice para inteiro
+            self.novo_status = novo_status  # Define o novo status
+            self.concluirTarefa()   # Conclui a tarefa
+        except Exception as error:  # Se ocorrer um erro durante a execução do bloco de código dentro do try
+            print(error.__class__.__name__)
+            print("Não foi possível concluir a tarefa.")
+    def concluirTarefa(self):   # Define o método concluirTarefa
+        try:    # Correção: Tratamento de exceção
+            if self.indice > 0: # Verifica se o índice especificado é válido
+                tarefas = DAO.listarTarefas()   # Correção: Chamada correta para DAO.listarTarefas
 
-            if indice >= 0 and indice < len(tarefas):
-                tarefa_parts = tarefas[indice].split(" - ", 2)
-                if len(tarefa_parts) == 3:
-                    id, status, descricao = tarefa_parts  # Extrai as partes da tarefa
-
-                    # Atualiza somente a descrição mantendo id e status
-                    tarefa_atualizada = f"{id} - {status} - {nova_descricao}\n"
-
-                    tarefas[indice] = tarefa_atualizada  # Atualiza a tarefa na lista
-
-                    # Reescreve todas as tarefas no arquivo
-                    with open(self.arquivo, "w") as arquivo:
-                        arquivo.writelines(tarefas)
-
-                    return True
+                if self.indice <= len(tarefas): # Verifica se o índice especificado é válido
+                    if DAO.concluirTarefa(self.indice - 1, self.novo_status):   # Correção: Chamada correta para DAO.ConcluirTarefa
+                        print("Tarefa alterada com sucesso.")   # Correção: Mensagem de sucesso
+                    else:
+                        print("Não foi possível alterar a tarefa.") 
                 else:
-                    print("Tarefa não encontrada.")
-                    return False
+                    print("Índice inválido.")
             else:
-                print("Índice inválido.")
-                return False
+                print("Operação cancelada.")
         except Exception as error:
             print(error.__class__.__name__)
-            return False
+            print("Não foi possível concluir a tarefa.")
 
-        
-    def concluirTarefa(self,indice, novo_status):
+
+class ControllerListarTarefasConcluidas:    # Define a classe ControllerListarTarefasConcluidas
+    #Lista somente as tarefas concluidas        
+    def __init__(self):     
+        self.lista = DAO.listarTarefas()    # Correção: Chamada correta para DAO.listarTarefas
+        self.exibirTarefasConcluidas()  # Exibe as tarefas concluídas
+
+    def exibirTarefasConcluidas(self):  # Define o método exibirTarefasConcluidas
+        if self.lista:  # Verifica se a lista não está vazia
+            for i, tarefa in enumerate(self.lista, start=1):    # Correção: Índice da lista começa em 0
+                tarefa_parts = tarefa.split(" - ", 2)   # Extrai as partes da tarefa
+                if len(tarefa_parts) == 3:  # Verifica se a tarefa foi encontrada
+                    _, status, texto_tarefa = tarefa_parts  # Extrai as partes da tarefa
+                    if status == "Concluído":   # Verifica se o status da tarefa é "Concluído"
+                        print(f"[{i}] - Status: {status}, Tarefa: {texto_tarefa}")  # Correção: Índice da lista começa em 0
+                else:   # Se a tarefa não foi encontrada
+                    print(f"[{i}] - Tarefa não encontrada.")    # Correção: Índice da lista começa em 0
+
+
+class ControllerAlterarTarefa:  # Define a classe ControllerAlterarTarefa
+    def __init__(self, indice, nova_descricao): # Define o método construtor que recebe o índice da tarefa a ser alterada e a nova descrição como parâmetros
         try:
-            with open(self.arquivo, "r") as arquivo:
-                tarefas = arquivo.readlines()
+            if not nova_descricao.strip():  # Verifica se a tarefa é vazia ou apenas espaços em branco
+                print("Tarefa vazia. Não foi possível adicionar.")  # Correção: Mensagem de erro
+            else:   # Se a tarefa não for vazia
+                self.indice = int(indice)   # Converte o índice para inteiro
+                self.nova_descricao = nova_descricao    # Define a nova descrição
+                self.alterar_tarefa()   # Altera a tarefa
+        except Exception as error:      # Se ocorrer um erro durante a execução do bloco de código dentro do try
+            print(error.__class__.__name__) 
+            print("Não foi possível alterar a tarefa.")
 
-            if indice >= 0 and indice < len(tarefas):
-                tarefa_parts = tarefas[indice].split(" - ", 2)
-                if len(tarefa_parts) == 3:
-                    _, status, _ = tarefa_parts
-                    tarefa_parts[1] = novo_status  # Altera apenas o status
-                    tarefas[indice] = " - ".join([tarefa_parts[0], tarefa_parts[1], tarefa_parts[2]])
+    def alterar_tarefa(self):   # Define o método alterar_tarefa
+        try:        # Correção: Tratamento de exceção
+            if self.indice > 0: # Verifica se o índice especificado é válido
+                tarefas = DAO.listarTarefas()   # Correção: Chamada correta para DAO.listarTarefas
 
-                    with open(self.arquivo, "w") as arquivo:
-                        arquivo.writelines(tarefas)
-
-                    return True
+                if self.indice <= len(tarefas): # Verifica se o índice especificado é válido
+                    if DAO.alterarTarefa(self.indice - 1, self.nova_descricao):  # Correção: Chamada correta para DAO.AlterarTarefa
+                        print("Tarefa alterada com sucesso.")
+                    else:
+                        print("Não foi possível alterar a tarefa.")
                 else:
-                    print("Tarefa não encontrada.")
-                    return False
+                    print("Índice inválido.")
             else:
-                print("Índice inválido.")
-                return False
+                print("Operação cancelada.")
         except Exception as error:
             print(error.__class__.__name__)
-            return False
-#///////////////////////////////////////////////////////////////////////
-    def adicionarTarefaConcluida(self, tarefa_concluida):
-        try:
-            with open(self.arquivo, "a") as arquivo:
-                arquivo.write(tarefa_concluida)
+            print("Não foi possível alterar a tarefa.")
 
-            return True
-
-        except Exception as error:
-            print(error.__class__.__name__)
-            return False
-#////////////////////////////////////////////////////////////////////////
-    def adicionarTarefaConcluida(self, tarefa_concluida):
-        try:
-            with open(self.arquivo, "a") as arquivo:
-                arquivo.write(tarefa_concluida)
-
-            return True
-
-        except Exception as error:
-            print(error.__class__.__name__)
-            return False
-#////////////////////////////////////////////////////////////////////////
-    def listarTarefasConcluidas(self):
-        try:
-            with open(self.arquivo, "r") as arquivo:
-                tarefas = arquivo.readlines()
-
-            tarefas_concluidas = [tarefa for tarefa in tarefas if "Concluída" in tarefa]
-
-            return tarefas_concluidas
-
-        except Exception as error:
-            print(error.__class__.__name__)
-            return False
-
-
-DAO = Dao()  # Cria uma instância da classe Dao e atribui à variável DAO
