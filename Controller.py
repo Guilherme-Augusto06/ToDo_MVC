@@ -37,7 +37,7 @@ class ControllerExcluirTarefa:  # Define a classe ControllerExcluirTarefa
                 tarefas = DAO.listarTarefas()   # Correção: Chamada correta para DAO.listarTarefas
 
                 if self.indice <= len(tarefas): # Verifica se o índice especificado é válido
-                    if DAO.concluirTarefa(self.indice + 1, self.novo_status):   # Correção: Chamada correta para DAO.ConcluirTarefa
+                    if DAO.concluirTarefa(self.indice, self.novo_status):   # Correção: Chamada correta para DAO.ConcluirTarefa
                         print("Tarefa excluida com sucesso.")   # Correção: Mensagem de sucesso
                     else:
                         print("Não foi possível alterar a tarefa.") 
@@ -87,7 +87,7 @@ class ControllerConcluirTarefa: # Define a classe ControllerConcluirTarefa
                 tarefas = DAO.listarTarefas()   # Correção: Chamada correta para DAO.listarTarefas
 
                 if self.indice <= len(tarefas): # Verifica se o índice especificado é válido
-                    if DAO.concluirTarefa(self.indice + 1, self.novo_status):   # Correção: Chamada correta para DAO.ConcluirTarefa
+                    if DAO.concluirTarefa(self.indice, self.novo_status):   # Correção: Chamada correta para DAO.ConcluirTarefa
                         print("Tarefa concluida com sucesso.")   # Correção: Mensagem de sucesso
                     else:
                         print("Não foi possível concluir a tarefa.") 
@@ -121,6 +121,7 @@ class ControllerListarTarefasConcluidas:
 
 
 
+
 class ControllerAlterarTarefa:  # Define a classe ControllerAlterarTarefa
     def __init__(self, indice, nova_descricao): # Define o método construtor que recebe o índice da tarefa a ser alterada e a nova descrição como parâmetros
         try:
@@ -140,7 +141,7 @@ class ControllerAlterarTarefa:  # Define a classe ControllerAlterarTarefa
                 tarefas = DAO.listarTarefas()   # Correção: Chamada correta para DAO.listarTarefas
 
                 if self.indice <= len(tarefas): # Verifica se o índice especificado é válido
-                    if DAO.alterarTarefa(self.indice + 1, self.nova_descricao):  # Correção: Chamada correta para DAO.AlterarTarefa
+                    if DAO.alterarTarefa(self.indice, self.nova_descricao):  # Correção: Chamada correta para DAO.AlterarTarefa
                         print("Tarefa alterada com sucesso.")
                     else:
                         print("Não foi possível alterar a tarefa.")
@@ -151,4 +152,3 @@ class ControllerAlterarTarefa:  # Define a classe ControllerAlterarTarefa
         except Exception as error:
             print(error.__class__.__name__)
             print("Não foi possível alterar a tarefa.")
-
