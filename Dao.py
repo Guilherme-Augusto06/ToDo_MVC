@@ -60,23 +60,33 @@ class Dao:
             return False
 
     # Define o método alterarTarefa que recebe o índice da tarefa a ser alterada e a nova descrição como parâmetros
-    def alterarTarefa(self, indice, novo_status):
+    # Define o método alterarTarefa que recebe o índice da tarefa a ser alterada e a nova descrição como parâmetros
+    def alterarTarefa(self, indice, nova_descricao):
         try:
-            tarefas = self.listarTarefas()
+            # Abre o arquivo em modo de leitura ("r")
+            with open(self.arquivo, "r") as arquivo:
+                # Lê todas as linhas do arquivo e armazena em uma lista
+                tarefas = arquivo.readlines()
+
+            # Verifica se o índice especificado é válido
             if indice >= 0 and indice < len(tarefas):
+                # Extrai as partes da tarefa
                 tarefa_parts = tarefas[indice].split(" - ", 2)
                 if len(tarefa_parts) == 3:
-                    tarefa_parts[1] = novo_status
-                    tarefas[indice] = " - ".join(tarefa_parts)
+                    id, status, descricao = tarefa_parts  # Extrai as partes da tarefa
+
+                    # Atualiza somente a descrição mantendo id e status
+                    tarefa_atualizada = f"{id} - {status} - {nova_descricao}\n"
+
+                    tarefas[indice] = tarefa_atualizada  # Atualiza a tarefa na lista
+
+                    # Reescreve todas as tarefas no arquivo
                     with open(self.arquivo, "w") as arquivo:
                         arquivo.writelines(tarefas)
+
                     return True
                 else:
                     print("Tarefa não encontrada.")
-                    return False
-            else:
-                print("Índice inválido.")
-                return False
         except Exception as error:
             print(error.__class__.__name__)
             return False
